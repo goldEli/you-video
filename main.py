@@ -38,8 +38,8 @@ def parse_arguments():
                       help='Whisper 模型大小，默认: base')
     parser.add_argument('--font-size', type=int, default=24,
                       help='字幕字体大小，默认: 24')
-    parser.add_argument('--font', default='SimHei',
-                      help='字幕字体，默认: SimHei')
+    parser.add_argument('--font', default='Hiragino Sans GB',
+                      help='字幕字体，默认: Hiragino Sans GB（更好地支持中文）')
     parser.add_argument('--skip-download', action='store_true',
                       help='跳过下载步骤，直接处理本地视频')
     parser.add_argument('--video-path', help='本地视频文件路径（当使用--skip-download时）')
@@ -104,7 +104,9 @@ def process_video(args):
         composition_result = compositor.process_video_with_subtitles(
             video_path=video_info['video_path'],
             subtitle_path=translation_result['translated_srt_path'],
-            output_dir=args.output_dir
+            output_dir=args.output_dir,
+            font_size=args.font_size,
+            font=args.font
         )
         
         # 4. 总结
