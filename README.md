@@ -91,6 +91,11 @@ python main.py "https://www.youtube.com/shorts/视频ID" --font-size 28
 python main.py "" --skip-download --video-path ./local_video.mp4
 ```
 
+```bash
+uv run python3 main.py "url" \
+    --font "Hiragino Sans GB" --font-size 10;
+```
+
 ## 命令行参数
 
 - `url`: YouTube Short 视频的 URL（必需，除非使用 --skip-download）
