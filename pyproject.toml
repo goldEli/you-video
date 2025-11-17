@@ -1,0 +1,13 @@
+[project]
+name = "you-video1"
+version = "0.1.0"
+description = "YouTube Short 下载与中文字幕生成工具"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "yt-dlp>=2024.5.27",
+    "openai-whisper>=20231117",
+    "pydub>=0.25.1",
+    "deep-translator>=1.11.4",
+    "moviepy>=1.0.3"
+]
