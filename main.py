@@ -133,17 +133,23 @@ def check_dependencies():
     检查系统依赖
     """
     try:
-        # 尝试导入所有需要的库
         import yt_dlp
         import whisper
         import pydub
-        import moviepy.editor
         import deep_translator
+        import moviepy
+        try:
+            from moviepy.editor import VideoFileClip
+        except ImportError:
+            try:
+                from moviepy.video.io.VideoFileClip import VideoFileClip
+            except ImportError:
+                from moviepy import VideoFileClip
         return True
     except ImportError as e:
         print(f"依赖库缺失: {e}")
         print("请使用以下命令安装依赖:")
-        print("  uv pip install -e .")
+        print("  uv sync")
         return False
 
 def main():
