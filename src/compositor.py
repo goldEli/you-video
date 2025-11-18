@@ -37,7 +37,7 @@ class VideoCompositor:
 
     def create_subtitle_clip(self, subtitle_path: str, video_width: int, video_height: int,
                            font_size: int = 24, font: str = 'Hiragino Sans GB', color: str = 'white',
-                           stroke_color: str = 'black', stroke_width: float = 1, margin: int = 50) -> List[TextClip]:
+                           stroke_color: str = 'black', stroke_width: float = 1, margin: int = 50) -> List[Any]:
         """
         手动创建字幕剪辑列表，直接使用TextClip
         
@@ -112,8 +112,17 @@ class VideoCompositor:
                     txt_clip = txt_clip.with_start(start_time).with_duration(end_time - start_time)
                     
                     # 设置字幕位置在底部并留出边距
-                    txt_clip = txt_clip.with_position(('center', max(0, video_height - margin)))
-                    
+                    position = ('center', max(0, video_height - margin))
+                    txt_clip = txt_clip.with_position(position)
+
+                    # 背景矩形（半透明黑）
+                    w, h = txt_clip.size
+                    pad_w, pad_h = 24, 12
+                    bg_clip = ColorClip((int(w + pad_w), int(h + pad_h)), color=(0, 0, 0))
+                    bg_clip = bg_clip.with_start(start_time).with_duration(end_time - start_time)
+                    bg_clip = bg_clip.with_position(position).with_opacity(0.4)
+
+                    subtitle_clips.append(bg_clip)
                     subtitle_clips.append(txt_clip)
                     
                 except Exception as e:
@@ -358,7 +367,17 @@ class VideoCompositor:
                 output_path = os.path.join(output_dir, f"{base_name}_subtitled.mp4")
 
             fonts_dir = "/System/Library/Fonts"
-            force_style = f"FontName={font},FontSize={int(font_size)},BorderStyle=3,Outline=0,Shadow=0,BackColour=&H80000000,MarginV=40"
+            force_style = (
+                f"FontName={font},"
+                f"FontSize={int(font_size)},"
+                f"PrimaryColour=&H00FFFFFF,"
+                f"OutlineColour=&H00000000,"
+                f"BorderStyle=3,"
+                f"Outline=6,"
+                f"Shadow=0,"
+                f"BackColour=&HC0000000,"
+                f"MarginV=40"
+            )
             vf_filter = f"subtitles={shlex.quote(subtitle_path)}:fontsdir={fonts_dir}:force_style={shlex.quote(force_style)}"
 
             cmd = [
